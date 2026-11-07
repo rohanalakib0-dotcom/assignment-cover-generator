@@ -3,265 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Assignment Cover Letter Generator</title>
+    <title>Assignment Cover Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        html {
-            scroll-behavior: smooth;
-        }
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f8fafc; /* Tailwind slate-50 */
-        }
+        html { scroll-behavior: smooth; }
+        body { font-family: 'Poppins', sans-serif; background-color: #f8fafc; }
         
-        /* Print specific styling */
-        @media print {
-            /* Hide everything by default */
-            body * {
-                visibility: hidden;
+        /* Strict Print Typography Enforcement */
+        .a4-font { font-family: 'Times New Roman', Times, serif; }
+
+        /* Desktop / Default A4 Layout */
+        .a4-paper {
+            width: 210mm;
+            height: 297mm;
+            background: white;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin: 0 auto;
+            padding: 2.5cm; /* Standard margins inside the paper */
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            color: black;
+        }
+
+        /* Mobile Responsiveness for Preview */
+        @media screen and (max-width: 768px) {
+            .a4-paper {
+                transform: scale(0.45);
+                transform-origin: top center;
+                margin-bottom: -75%; /* Compensates for the scaled down height so layout doesn't break */
             }
-            /* Show only the print area */
-            #print-area, #print-area * {
+        }
+        @media screen and (min-width: 769px) and (max-width: 1024px) {
+            .a4-paper {
+                transform: scale(0.7);
+                transform-origin: top center;
+                margin-bottom: -40%;
+            }
+        }
+
+        /* Strict Print Settings to Force 1 Page & Remove Headers/Footers */
+        @media print {
+            /* Setting margin to 0 completely overrides and hides the default browser URLs, page numbers, and dates */
+            @page { 
+                size: A4 portrait; 
+                margin: 0; 
+            }
+            
+            body {
+                visibility: hidden;
+                background: white;
+                margin: 0;
+                padding: 0;
+            }
+            
+            /* Only show the A4 paper */
+            #preview-paper, #preview-paper * {
                 visibility: visible;
             }
-            /* Position the print area at the top left of the page */
-            #print-area {
+            
+            #preview-paper {
                 position: absolute;
                 left: 0;
                 top: 0;
-                width: 100%;
+                width: 210mm;
+                height: 297mm;
+                margin: 0;
+                padding: 2.5cm; /* Padding acts as the margin safely inside the 1-page boundary */
+                box-shadow: none;
+                transform: scale(1) !important;
+                page-break-inside: avoid;
+                page-break-after: avoid;
+                overflow: hidden;
+            }
+            
+            /* Lock the body height to prevent multi-page overflow spills */
+            html, body {
                 height: 100%;
-                box-shadow: none !important;
-                margin: 0 !important;
-                padding: 2cm !important; /* Standard print padding */
-                border-radius: 0 !important;
+                overflow: hidden;
             }
-            /* Hide the print button when printing */
-            .no-print {
-                display: none !important;
-            }
-            /* Remove background color for printing */
-            body {
-                background-color: white;
-            }
-        }
-        
-        /* Simulated A4 Paper with premium shadow */
-        .a4-paper {
-            width: 210mm;
-            min-height: 297mm;
-            background: white;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15), 0 0 20px rgba(0,0,0,0.05);
-            border-radius: 4px;
-        }
-
-        /* Custom Scrollbar for form */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background-color: #cbd5e1;
-            border-radius: 20px;
         }
     </style>
 </head>
-<body class="overflow-x-hidden bg-slate-50 selection:bg-indigo-100 selection:text-indigo-900">
+<body class="text-slate-800">
 
-    <!-- Premium Hero Section -->
-    <section class="min-h-screen w-full flex flex-col justify-center items-center relative text-white bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-indigo-900 to-slate-900 no-print text-center px-6 overflow-hidden">
-        <!-- Glassmorphism decorative blobs -->
-        <div class="absolute top-20 left-1/4 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-40 animate-pulse"></div>
-        <div class="absolute bottom-20 right-1/4 w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-[128px] opacity-40 animate-pulse" style="animation-delay: 2s;"></div>
-        
-        <div class="relative z-10 flex flex-col items-center">
-            <div class="inline-block mb-4 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-indigo-200 text-sm font-medium tracking-wide">
-                100% Free • Academic Excellence
+    <!-- Welcome Hero Section -->
+    <header class="min-h-screen flex flex-col items-center justify-center text-center px-6 bg-gradient-to-br from-indigo-50 via-white to-blue-50">
+        <div class="max-w-3xl space-y-6">
+            <div class="inline-block p-4 bg-indigo-100 rounded-full mb-4">
+                <svg class="w-12 h-12 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
             </div>
-            <h1 class="text-4xl md:text-5xl lg:text-7xl font-bold mb-6 drop-shadow-2xl max-w-5xl leading-[1.1] tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-white via-indigo-100 to-purple-200">
-                Welcome, and thank you for using this Cover Page Generator for your Academic life
-            </h1>
-            <p class="text-lg md:text-2xl font-light text-indigo-100/80 mb-16 max-w-2xl leading-relaxed">
-                Create professional assignment covers with perfect formatting in seconds. No styling required.
-            </p>
+            <h1 class="text-4xl md:text-6xl font-extrabold text-slate-900 tracking-tight">Welcome,</h1>
+            <p class="text-xl md:text-2xl text-slate-600 leading-relaxed">and thank you for using this Cover Page Generator for your Academic life.</p>
+            <div class="pt-8">
+                <a href="#generator-section" class="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-8 py-4 rounded-full font-semibold shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
+                    Create Your Cover Page
+                    <svg class="w-5 h-5 animate-bounce mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"></path></svg>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Generator Section -->
+    <section id="generator-section" class="min-h-screen py-20 px-4 md:px-8 bg-slate-50">
+        <div class="max-w-7xl mx-auto flex flex-col xl:flex-row gap-12 items-start">
             
-            <a href="#generator-section" class="group flex flex-col items-center gap-3 transition-all duration-300 hover:scale-105">
-                <span class="text-sm font-semibold text-white/70 uppercase tracking-widest group-hover:text-white transition-colors">Get Started</span>
-                <div class="p-4 rounded-full bg-white/10 hover:bg-white/20 transition-all duration-300 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] border border-white/20 animate-bounce">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-                    </svg>
+            <!-- Input Form (Glassmorphism) -->
+            <div class="w-full xl:w-1/3 bg-white/70 backdrop-blur-xl p-8 rounded-3xl shadow-xl border border-white/60">
+                <h2 class="text-2xl font-bold mb-6 text-indigo-900">Assignment Details</h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Assignment Topic</label>
+                        <input type="text" id="in-topic" value="International Trade Theories" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition bg-white/50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Course Name</label>
+                        <input type="text" id="in-course" value="Open Economy Macroeconomics" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition bg-white/50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Section</label>
+                        <input type="text" id="in-section" value="A" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition bg-white/50">
+                    </div>
+                    
+                    <div class="pt-4 border-t border-slate-200">
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Teacher Name</label>
+                        <input type="text" id="in-teacher" value="Jane Smith" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition bg-white/50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Designation</label>
+                        <input type="text" id="in-designation" value="Assistant Professor" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition bg-white/50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Department/School</label>
+                        <input type="text" id="in-dept" value="School of Business and Economics" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition bg-white/50">
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-200">
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Student Name</label>
+                        <input type="text" id="in-student" value="John Doe" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition bg-white/50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Student ID</label>
+                        <input type="text" id="in-id" value="123456789" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition bg-white/50">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-slate-700 mb-1">Date of Submission</label>
+                        <input type="text" id="in-date" value="12th August 2026" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition bg-white/50">
+                    </div>
+                    
+                    <button onclick="window.print()" class="w-full mt-6 bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded-xl shadow-lg transition-all flex justify-center items-center gap-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                        Print A4 Cover Page
+                    </button>
                 </div>
-            </a>
+            </div>
+
+            <!-- Live A4 Preview -->
+            <div class="w-full xl:w-2/3 flex justify-center overflow-visible px-2">
+                <div id="preview-paper" class="a4-paper a4-font text-center">
+                    
+                    <!-- Top Section -->
+                    <div>
+                        <!-- Strict formatting rule: United (bold) International (normal) University (bold) on single line -->
+                        <h1 class="text-[26px] mb-10 leading-tight whitespace-nowrap"><span class="font-bold">United</span> <span class="font-normal">International</span> <span class="font-bold">University</span></h1>
+                        
+                        <div class="mb-8">
+                            <p class="font-bold text-[18px]">Assignment on</p>
+                            <p id="out-topic" class="text-[18px] mt-2 font-normal">International Trade Theories</p>
+                        </div>
+                        
+                        <div class="mb-8">
+                            <p class="font-bold text-[18px]">Name of Course</p>
+                            <p id="out-course" class="text-[18px] mt-2 font-normal">Open Economy Macroeconomics</p>
+                        </div>
+                        
+                        <div class="mb-8">
+                            <p class="font-bold text-[18px]">Section</p>
+                            <p id="out-section" class="text-[18px] mt-2 font-normal">A</p>
+                        </div>
+                    </div>
+
+                    <!-- Middle Section (Submitted to) -->
+                    <div class="mb-8">
+                        <p class="font-bold text-[18px]">Submitted to</p>
+                        <p id="out-teacher" class="text-[18px] mt-2 font-normal">Jane Smith</p>
+                        <p id="out-designation" class="text-[18px] mt-2 font-normal">Assistant Professor</p>
+                        <p id="out-dept" class="text-[18px] mt-2 font-normal">School of Business and Economics</p>
+                    </div>
+
+                    <!-- Middle-Bottom Section (Submitted by) -->
+                    <div class="mb-8">
+                        <p class="font-bold text-[18px]">Submitted by</p>
+                        <p id="out-student" class="text-[18px] mt-2 font-normal">John Doe</p>
+                        <p id="out-id" class="text-[18px] mt-2 font-normal">Id-123456789</p>
+                    </div>
+
+                    <!-- Bottom Section (Date) -->
+                    <div>
+                        <p class="font-bold text-[18px]">Date of Submission</p>
+                        <p id="out-date" class="text-[18px] mt-2 font-normal">12th August 2026</p>
+                    </div>
+
+                </div>
+            </div>
+
         </div>
     </section>
 
-    <!-- Generator Section -->
-    <section id="generator-section" class="w-full flex flex-col lg:flex-row max-w-[1600px] mx-auto p-4 md:p-8 lg:p-12 gap-8 lg:gap-12 min-h-screen">
-        
-        <!-- Left Panel: Premium Form Inputs -->
-        <aside class="w-full lg:w-[400px] xl:w-[450px] bg-white/80 backdrop-blur-2xl shadow-[0_8px_30px_rgb(0,0,0,0.06)] border border-white rounded-3xl flex flex-col lg:sticky lg:top-12 h-auto lg:h-[calc(100vh-6rem)] z-10 no-print flex-shrink-0">
-            <div class="p-8 border-b border-slate-100 bg-white/50 rounded-t-3xl">
-                <h2 class="text-2xl font-bold text-slate-800 tracking-tight">Assignment Info</h2>
-                <p class="text-sm text-slate-500 mt-2 font-medium">Update the fields below to see real-time changes.</p>
-            </div>
-            
-            <div class="flex-1 overflow-y-auto p-8 space-y-6 custom-scrollbar">
-                
-                <!-- Input Groups -->
-                <div class="group">
-                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 group-focus-within:text-indigo-600 transition-colors">1. Assignment Topic</label>
-                    <input type="text" id="input-topic" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-slate-800 text-sm font-medium focus:bg-white focus:ring-4 focus:ring-indigo-500/15 focus:border-indigo-500 outline-none transition-all duration-200" placeholder="e.g. Case Study Analysis" value="Demo Case Study">
-                </div>
-
-                <div class="group">
-                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 group-focus-within:text-indigo-600 transition-colors">2. Course Name</label>
-                    <input type="text" id="input-course" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-slate-800 text-sm font-medium focus:bg-white focus:ring-4 focus:ring-indigo-500/15 focus:border-indigo-500 outline-none transition-all duration-200" value="Introduction to Business">
-                </div>
-
-                <div class="group">
-                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 group-focus-within:text-indigo-600 transition-colors">3. Section</label>
-                    <input type="text" id="input-section" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-slate-800 text-sm font-medium focus:bg-white focus:ring-4 focus:ring-indigo-500/15 focus:border-indigo-500 outline-none transition-all duration-200" value="Demo Section">
-                </div>
-
-                <div class="border-t border-slate-100 pt-6 mt-2 group">
-                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 group-focus-within:text-indigo-600 transition-colors">4. Teacher Name</label>
-                    <input type="text" id="input-teacher-name" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-slate-800 text-sm font-medium focus:bg-white focus:ring-4 focus:ring-indigo-500/15 focus:border-indigo-500 outline-none transition-all duration-200" value="Jane Smith">
-                </div>
-
-                <div class="group">
-                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 group-focus-within:text-indigo-600 transition-colors">5. Teacher Designation</label>
-                    <input type="text" id="input-teacher-designation" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-slate-800 text-sm font-medium focus:bg-white focus:ring-4 focus:ring-indigo-500/15 focus:border-indigo-500 outline-none transition-all duration-200" value="Professor">
-                </div>
-
-                <div class="border-t border-slate-100 pt-6 mt-2 group">
-                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 group-focus-within:text-indigo-600 transition-colors">6. Student Name</label>
-                    <input type="text" id="input-student-name" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-slate-800 text-sm font-medium focus:bg-white focus:ring-4 focus:ring-indigo-500/15 focus:border-indigo-500 outline-none transition-all duration-200" value="John Doe">
-                </div>
-
-                <div class="group">
-                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 group-focus-within:text-indigo-600 transition-colors">7. Student ID</label>
-                    <input type="text" id="input-student-id" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-slate-800 text-sm font-medium focus:bg-white focus:ring-4 focus:ring-indigo-500/15 focus:border-indigo-500 outline-none transition-all duration-200" value="123456789">
-                </div>
-
-                <div class="border-t border-slate-100 pt-6 mt-2 group">
-                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2 group-focus-within:text-indigo-600 transition-colors">8. Date of Submission</label>
-                    <input type="text" id="input-date" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3.5 text-slate-800 text-sm font-medium focus:bg-white focus:ring-4 focus:ring-indigo-500/15 focus:border-indigo-500 outline-none transition-all duration-200" value="12th August 2026">
-                </div>
-                
-            </div>
-            
-            <div class="p-6 border-t border-slate-100 bg-white/80 rounded-b-3xl">
-                <button onclick="window.print()" class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold py-4 px-6 rounded-2xl shadow-[0_8px_20px_rgba(79,70,229,0.25)] hover:shadow-[0_8px_25px_rgba(79,70,229,0.4)] transform hover:-translate-y-0.5 transition-all duration-200 flex justify-center items-center gap-3">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                    </svg>
-                    Print Cover Page
-                </button>
-            </div>
-        </aside>
-
-        <!-- Right Panel: Live Preview Container -->
-        <main class="w-full flex-1 bg-transparent flex justify-center items-start overflow-y-visible">
-            
-            <!-- A4 Paper Container -->
-            <div id="print-area" class="a4-paper flex flex-col justify-between py-24 px-16 text-center mx-auto mt-4 mb-12 text-black" style="font-family: 'Times New Roman', Times, serif;">
-                
-                <!-- Top Section -->
-                <div class="flex flex-col space-y-6">
-                    <div class="text-[28px] whitespace-nowrap">
-                        <span class="font-bold">United</span> <span class="font-normal">International</span> <span class="font-bold">University</span>
-                    </div>
-                    
-                    <div class="mt-8">
-                        <p class="text-lg font-semibold">Assignment on</p>
-                        <p id="preview-topic" class="text-xl font-normal mt-1"></p>
-                    </div>
-
-                    <div>
-                        <p class="text-lg font-semibold">Name of Course</p>
-                        <p id="preview-course" class="text-xl font-normal mt-1"></p>
-                    </div>
-
-                    <div>
-                        <p class="text-lg font-semibold">Section</p>
-                        <p id="preview-section" class="text-xl font-normal mt-1"></p>
-                    </div>
-                </div>
-
-                <!-- Middle Lower Section: Submitted To / By -->
-                <div class="flex flex-col space-y-12 mt-16">
-                    <!-- Submitted To -->
-                    <div>
-                        <p class="text-lg font-semibold mb-2">Submitted to</p>
-                        <p id="preview-teacher-name" class="text-xl font-normal"></p>
-                        <p id="preview-teacher-designation" class="text-lg font-normal"></p>
-                        <p class="text-lg font-medium mt-1">School of Business and Economics</p>
-                    </div>
-
-                    <!-- Submitted By -->
-                    <div>
-                        <p class="text-lg font-semibold mb-2">Submitted by</p>
-                        <p id="preview-student-name" class="text-xl font-normal"></p>
-                        <p class="text-lg font-normal">Id-<span id="preview-student-id"></span></p>
-                    </div>
-                </div>
-
-                <!-- Bottom Section -->
-                <div class="mt-16">
-                    <p class="text-lg font-semibold mb-2">Date of Submission</p>
-                    <p id="preview-date" class="text-lg font-normal"></p>
-                </div>
-
-            </div>
-        </main>
-
-    </section>
-
-    <!-- JavaScript for Live Preview Binding -->
     <script>
-        // Define mapping between input IDs and preview IDs
-        const bindings = [
-            { input: 'input-topic', preview: 'preview-topic' },
-            { input: 'input-course', preview: 'preview-course' },
-            { input: 'input-section', preview: 'preview-section' },
-            { input: 'input-teacher-name', preview: 'preview-teacher-name' },
-            { input: 'input-teacher-designation', preview: 'preview-teacher-designation' },
-            { input: 'input-student-name', preview: 'preview-student-name' },
-            { input: 'input-student-id', preview: 'preview-student-id' },
-            { input: 'input-date', preview: 'preview-date' }
-        ];
-
-        // Function to update a single preview element
-        function updatePreview(inputId, previewId) {
-            const inputEl = document.getElementById(inputId);
-            const previewEl = document.getElementById(previewId);
-            if (inputEl && previewEl) {
-                previewEl.textContent = inputEl.value;
-            }
-        }
-
-        // Initialize bindings
-        function initBindings() {
-            bindings.forEach(binding => {
-                const inputEl = document.getElementById(binding.input);
-                if (inputEl) {
-                    // Update on initial load
-                    updatePreview(binding.input, binding.preview);
-                    
-                    // Add event listener for real-time updates
-                    inputEl.addEventListener('input', () => {
-                        updatePreview(binding.input, binding.preview);
-                    });
-                }
+        // Real-time bidirectional binding
+        const fields = ['topic', 'course', 'section', 'teacher', 'designation', 'dept', 'student', 'id', 'date'];
+        
+        fields.forEach(field => {
+            const input = document.getElementById(`in-${field}`);
+            const output = document.getElementById(`out-${field}`);
+            
+            input.addEventListener('input', (e) => {
+                // Uses non-breaking space if empty to prevent layout collapse
+                output.innerText = e.target.value || '\u00A0';
             });
-        }
-
-        // Run when DOM is fully loaded
-        document.addEventListener('DOMContentLoaded', initBindings);
+        });
     </script>
 </body>
 </html>
