@@ -171,43 +171,37 @@
             <div class="w-full xl:w-2/3 flex justify-center overflow-visible px-2">
                 <div id="preview-paper" class="a4-paper a4-font text-center">
                     
-                    <!-- Top Section -->
+                    <!-- Flattened structure to ensure equal spacing between every block -->
+                    <h1 class="text-[26px] leading-tight whitespace-nowrap"><span class="font-bold">United</span> <span class="font-normal">International</span> <span class="font-bold">University</span></h1>
+                    
                     <div>
-                        <!-- Strict formatting rule: United (bold) International (normal) University (bold) on single line -->
-                        <h1 class="text-[26px] mb-10 leading-tight whitespace-nowrap"><span class="font-bold">United</span> <span class="font-normal">International</span> <span class="font-bold">University</span></h1>
-                        
-                        <div class="mb-8">
-                            <p class="font-bold text-[18px]">Assignment on</p>
-                            <p id="out-topic" class="text-[18px] mt-2 font-normal">International Trade Theories</p>
-                        </div>
-                        
-                        <div class="mb-8">
-                            <p class="font-bold text-[18px]">Name of Course</p>
-                            <p id="out-course" class="text-[18px] mt-2 font-normal">Open Economy Macroeconomics</p>
-                        </div>
-                        
-                        <div class="mb-8">
-                            <p class="font-bold text-[18px]">Section</p>
-                            <p id="out-section" class="text-[18px] mt-2 font-normal">A</p>
-                        </div>
+                        <p class="font-bold text-[18px]">Assignment on</p>
+                        <p id="out-topic" class="text-[18px] mt-2 font-normal">International Trade Theories</p>
+                    </div>
+                    
+                    <div>
+                        <p class="font-bold text-[18px]">Name of Course</p>
+                        <p id="out-course" class="text-[18px] mt-2 font-normal">Open Economy Macroeconomics</p>
+                    </div>
+                    
+                    <div>
+                        <p class="font-bold text-[18px]">Section</p>
+                        <p id="out-section" class="text-[18px] mt-2 font-normal">A</p>
                     </div>
 
-                    <!-- Middle Section (Submitted to) -->
-                    <div class="mb-8">
+                    <div>
                         <p class="font-bold text-[18px]">Submitted to</p>
                         <p id="out-teacher" class="text-[18px] mt-2 font-normal">Jane Smith</p>
                         <p id="out-designation" class="text-[18px] mt-2 font-normal">Assistant Professor</p>
                         <p id="out-dept" class="text-[18px] mt-2 font-normal">School of Business and Economics</p>
                     </div>
 
-                    <!-- Middle-Bottom Section (Submitted by) -->
-                    <div class="mb-8">
+                    <div>
                         <p class="font-bold text-[18px]">Submitted by</p>
                         <p id="out-student" class="text-[18px] mt-2 font-normal">John Doe</p>
                         <p id="out-id" class="text-[18px] mt-2 font-normal">Id-123456789</p>
                     </div>
 
-                    <!-- Bottom Section (Date) -->
                     <div>
                         <p class="font-bold text-[18px]">Date of Submission</p>
                         <p id="out-date" class="text-[18px] mt-2 font-normal">12th August 2026</p>
@@ -247,7 +241,7 @@
 
             // PDF Configuration
             const opt = {
-                margin:       0, // No extra margins, rely on the paper padding
+                margin:       0,
                 filename:     'Assignment_Cover_Page.pdf',
                 image:        { type: 'jpeg', quality: 1.0 },
                 html2canvas:  { scale: 2, useCORS: true },
