@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assignment Cover Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Add html2pdf library for mobile PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         html { scroll-behavior: smooth; }
@@ -46,7 +48,6 @@
 
         /* Strict Print Settings to Force 1 Page & Remove Headers/Footers */
         @media print {
-            /* Setting margin to 0 completely overrides and hides the default browser URLs, page numbers, and dates */
             @page { 
                 size: A4 portrait; 
                 margin: 0; 
@@ -59,7 +60,6 @@
                 padding: 0;
             }
             
-            /* Only show the A4 paper */
             #preview-paper, #preview-paper * {
                 visibility: visible;
             }
@@ -71,7 +71,7 @@
                 width: 210mm;
                 height: 297mm;
                 margin: 0;
-                padding: 2.5cm; /* Padding acts as the margin safely inside the 1-page boundary */
+                padding: 2.5cm;
                 box-shadow: none;
                 transform: scale(1) !important;
                 page-break-inside: avoid;
@@ -79,7 +79,6 @@
                 overflow: hidden;
             }
             
-            /* Lock the body height to prevent multi-page overflow spills */
             html, body {
                 height: 100%;
                 overflow: hidden;
@@ -110,7 +109,7 @@
     <section id="generator-section" class="min-h-screen py-20 px-4 md:px-8 bg-slate-50">
         <div class="max-w-7xl mx-auto flex flex-col xl:flex-row gap-12 items-start">
             
-            <!-- Input Form (Glassmorphism) -->
+            <!-- Input Form -->
             <div class="w-full xl:w-1/3 bg-white/70 backdrop-blur-xl p-8 rounded-3xl shadow-xl border border-white/60">
                 <h2 class="text-2xl font-bold mb-6 text-indigo-900">Assignment Details</h2>
                 
@@ -154,10 +153,17 @@
                         <input type="text" id="in-date" value="12th August 2026" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition bg-white/50">
                     </div>
                     
-                    <button onclick="window.print()" class="w-full mt-6 bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded-xl shadow-lg transition-all flex justify-center items-center gap-2">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
-                        Print A4 Cover Page
-                    </button>
+                    <!-- Action Buttons for Print and PDF -->
+                    <div class="flex flex-col sm:flex-row gap-4 mt-6">
+                        <button onclick="window.print()" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-4 rounded-xl shadow-lg transition-all flex justify-center items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+                            Print A4
+                        </button>
+                        <button onclick="saveAsPDF()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl shadow-lg transition-all flex justify-center items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+                            Save as PDF
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -222,10 +228,38 @@
             const output = document.getElementById(`out-${field}`);
             
             input.addEventListener('input', (e) => {
-                // Uses non-breaking space if empty to prevent layout collapse
                 output.innerText = e.target.value || '\u00A0';
             });
         });
+
+        // PDF Generation Function
+        function saveAsPDF() {
+            const element = document.getElementById('preview-paper');
+            
+            // Create a temporary style element to disable mobile scaling during PDF generation
+            const style = document.createElement('style');
+            style.innerHTML = `
+                @media screen {
+                    .a4-paper { transform: none !important; margin-bottom: 0 !important; }
+                }
+            `;
+            document.head.appendChild(style);
+
+            // PDF Configuration
+            const opt = {
+                margin:       0, // No extra margins, rely on the paper padding
+                filename:     'Assignment_Cover_Page.pdf',
+                image:        { type: 'jpeg', quality: 1.0 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Generate and download
+            html2pdf().set(opt).from(element).save().then(() => {
+                // Remove the temporary style to restore mobile layout
+                document.head.removeChild(style);
+            });
+        }
     </script>
 </body>
 </html>
